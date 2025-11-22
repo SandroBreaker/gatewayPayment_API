@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invictus Pay - Checkout Nativo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="pixModal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="closeModalButton" class="close-modal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <h2 class="modal-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" color="#16a34a" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                PIX Gerado!
+            </h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                
+                <div id="qrCodeContainer" style="text-align: center; display: none;">
+                    <p style="margin-bottom: 0.5rem; font-weight: 600;">Escaneie no App do Banco:</p>
+                    <img id="qrCodeImage" alt="QR Code PIX" style="width: 180px; height: 180px; border-radius: 8px; margin: 0 auto;">
+                </div>
+                
+                <div style="background: #eef2ff; padding: 1rem; border-radius: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #4f46e5; font-weight: 600;">Valor Total:</span>
+                    <span id="modalAmount" style="font-size: 1.5rem; font-weight: 800; color: #4338ca;"></span>
+                </div>
+
+                <div>
+                    <label for="pixCodeTextarea">Pix Copia e Cola:</label>
+                    <textarea id="pixCodeTextarea" readonly rows="3" style="font-family: monospace; font-size: 0.8rem;"></textarea>
+                </div>
+
+                <button id="copyPixButton" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    <span id="copyButtonText">COPIAR CÓDIGO</span>
+                </button>
+                
+                <p id="modalHash" style="font-size: 0.7rem; text-align: center; opacity: 0.6; margin-top: 0.5rem;">Hash: </p>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div style="margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1.5rem;">
+            <h1>Checkout Transparente</h1>
+            <p>Simulação de pedido via API Invictus Pay (CSS Nativo).</p>
+        </div>
+
+        <form id="pixCheckoutForm">
+            
+            <div class="section-box">
+                <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+                    Dados da Oferta
+                </h3>
+                <div class="form-group">
+                    <label>Hash do Produto</label>
+                    <div class="input-group-row">
+                        <input type="text" id="offerHashInput" name="offer_hash" value="png8aj6v6p" readonly>
+                        <span class="price-tag">R$ 20,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="font-size: 0.8rem; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;">Dados Pessoais</h4>
+                
+                <div class="form-grid">
+                    <div class="full-width form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" name="name" required value="João da Silva">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" name="email" required value="teste@exemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>CPF/CNPJ</label>
+                        <input type="text" name="document" required value="09115751031">
+                    </div>
+                    <div class="full-width form-group">
+                        <label>Telefone (Whatsapp)</label>
+                        <input type="text" name="phone_number" required value="21999999999">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h4 style="font-size: 0.8rem; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;">Endereço</h4>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>CEP</label>
+                        <input type="text" name="zip_code" required value="23822180">
+                    </div>
+                    <div class="form-group">
+                        <label>Estado (UF)</label>
+                        <input type="text" name="state" required value="RJ" maxlength="2">
+                    </div>
+                    <div class="full-width form-group">
+                        <label>Rua</label>
+                        <input type="text" name="street_name" required value="Rua Teste">
+                    </div>
+                    <div class="form-group">
+                        <label>Número</label>
+                        <input type="text" name="number" required value="sn">
+                    </div>
+                    <div class="form-group">
+                        <label>Complemento</label>
+                        <input type="text" name="complement" value="Apt 101">
+                    </div>
+                    <div class="form-group">
+                        <label>Bairro</label>
+                        <input type="text" name="neighborhood" required value="Centro">
+                    </div>
+                    <div class="form-group">
+                        <label>Cidade</label>
+                        <input type="text" name="city" required value="Itaguaí">
+                    </div>
+                </div>
+            </div>
+                   
+            <button type="submit" id="requestPixButton" class="btn btn-success">
+                <div id="loadingSpinnerPix" class="spinner"></div>
+                <span>FINALIZAR PEDIDO</span>
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Log da API</span>
+                <button id="fetchProductsButton" class="btn-link">Ver Produtos (GET)</button>
+            </div>
+            <div id="resultsContainer" class="debug-box">// Aguardando transação...</div>
+        </div>
+
+    </div>
+
+    <script type="module" src="firebase-init.js"></script>
+    <script src="main.js" defer></script>
+</body>
+</html>
